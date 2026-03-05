@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import { Button, Container, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
+import { Container, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import './App.css';
 
 const data = [
@@ -45,10 +45,7 @@ class Manager extends React.Component {
   };
 
   mostrarModalActualizar = (dato) => {
-    this.setState({
-      form: dato,
-      modalActualizar: true,
-    });
+    this.setState({ form: dato, modalActualizar: true });
   };
 
   cerrarModalActualizar = () => {
@@ -92,7 +89,7 @@ class Manager extends React.Component {
   };
 
   eliminar = (dato) => {
-    const opcion = window.confirm('Estás Seguro que deseas Eliminar el elemento ' + dato.id);
+    const opcion = window.confirm('¿Estás seguro de que deseas eliminar el registro #' + dato.id + '?');
     if (opcion === true) {
       const arreglo = this.state.data.filter((registro) => registro.id !== dato.id);
       this.setState({ data: arreglo, modalActualizar: false });
@@ -109,104 +106,114 @@ class Manager extends React.Component {
 
   render() {
     return (
-      <>
+      <div className="page-wrapper">
         <Container>
-          <br />
-          <Button color="success" onClick={() => this.mostrarModalInsertar()}>
-            Crear
-          </Button>
-          <br />
-          <br />
-          <Table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Empresa</th>
-                <th>Edad</th>
-                <th>País</th>
-                <th>Contacto</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.data.map((dato) => (
-                <tr key={dato.id}>
-                  <td>{dato.id}</td>
-                  <td>{dato.nombre}</td>
-                  <td>{dato.empresa}</td>
-                  <td>{dato.edad}</td>
-                  <td>{dato.pais}</td>
-                  <td>{dato.contacto}</td>
-                  <td>
-                    <Button color="primary" onClick={() => this.mostrarModalActualizar(dato)}>
-                      Editar
-                    </Button>{' '}
-                    <Button color="danger" onClick={() => this.eliminar(dato)}>
-                      Eliminar
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          {/* Header */}
+          <div className="page-header">
+            <h1>Gestión de Contactos</h1>
+            <p>Administra y organiza la información de tus contactos</p>
+          </div>
+
+          {/* Table card */}
+          <div className="table-card">
+            <div className="table-card-header">
+              <span>{this.state.data.length} registros</span>
+              <button className="btn-create" onClick={() => this.mostrarModalInsertar()}>
+                + Nuevo contacto
+              </button>
+            </div>
+
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Empresa</th>
+                    <th>Edad</th>
+                    <th>País</th>
+                    <th>Contacto</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.data.map((dato) => (
+                    <tr key={dato.id}>
+                      <td><span className="cell-id">#{dato.id}</span></td>
+                      <td><span className="cell-name">{dato.nombre}</span></td>
+                      <td>{dato.empresa}</td>
+                      <td>{dato.edad}</td>
+                      <td>{dato.pais}</td>
+                      <td><span className="cell-email">{dato.contacto}</span></td>
+                      <td>
+                        <button className="btn-edit" onClick={() => this.mostrarModalActualizar(dato)}>
+                          Editar
+                        </button>
+                        <button className="btn-delete" onClick={() => this.eliminar(dato)}>
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </Container>
 
-        <Modal isOpen={this.state.modalInsertar}>
+        {/* Modal Insertar */}
+        <Modal isOpen={this.state.modalInsertar} centered>
           <ModalHeader>
-            <div>
-              <h3>Insertar nombre</h3>
-            </div>
+            <h3>Nuevo contacto</h3>
           </ModalHeader>
           <ModalBody>
             <FormGroup>
-              <label>Id: </label>
+              <label className="form-label">ID</label>
               <input className="form-control" readOnly type="text" value={this.state.data.length + 1} />
             </FormGroup>
             <FormGroup>
-              <label>Nombre: </label>
-              <input className="form-control" name="nombre" type="text" onChange={this.handleChange} />
+              <label className="form-label">Nombre</label>
+              <input className="form-control" name="nombre" type="text" placeholder="Nombre completo" onChange={this.handleChange} />
             </FormGroup>
             <FormGroup>
-              <label>Empresa: </label>
-              <input className="form-control" name="empresa" type="text" onChange={this.handleChange} />
+              <label className="form-label">Empresa</label>
+              <input className="form-control" name="empresa" type="text" placeholder="Empresa u organización" onChange={this.handleChange} />
             </FormGroup>
             <FormGroup>
-              <label>Edad: </label>
-              <input className="form-control" name="edad" type="number" onChange={this.handleChange} />
+              <label className="form-label">Edad</label>
+              <input className="form-control" name="edad" type="number" placeholder="Edad" onChange={this.handleChange} />
             </FormGroup>
             <FormGroup>
-              <label>País: </label>
-              <input className="form-control" name="pais" type="text" onChange={this.handleChange} />
+              <label className="form-label">País</label>
+              <input className="form-control" name="pais" type="text" placeholder="País de origen" onChange={this.handleChange} />
             </FormGroup>
             <FormGroup>
-              <label>Contacto: </label>
-              <input className="form-control" name="contacto" type="text" onChange={this.handleChange} />
+              <label className="form-label">Contacto</label>
+              <input className="form-control" name="contacto" type="text" placeholder="correo@ejemplo.com" onChange={this.handleChange} />
             </FormGroup>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={() => this.insertar()}>
-              Insertar
-            </Button>
-            <Button color="danger" onClick={() => this.cerrarModalInsertar()}>
+            <button className="btn-modal-cancel" onClick={() => this.cerrarModalInsertar()}>
               Cancelar
-            </Button>
+            </button>
+            <button className="btn-modal-confirm" onClick={() => this.insertar()}>
+              Guardar
+            </button>
           </ModalFooter>
         </Modal>
 
-        <Modal isOpen={this.state.modalActualizar}>
+        {/* Modal Actualizar */}
+        <Modal isOpen={this.state.modalActualizar} centered>
           <ModalHeader>
-            <div>
-              <h3>Editar Registro</h3>
-            </div>
+            <h3>Editar contacto</h3>
           </ModalHeader>
           <ModalBody>
             <FormGroup>
-              <label>Id:</label>
+              <label className="form-label">ID</label>
               <input className="form-control" readOnly type="text" value={this.state.form.id} />
             </FormGroup>
             <FormGroup>
-              <label>Nombre:</label>
+              <label className="form-label">Nombre</label>
               <input
                 className="form-control"
                 name="nombre"
@@ -216,7 +223,7 @@ class Manager extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <label>Empresa:</label>
+              <label className="form-label">Empresa</label>
               <input
                 className="form-control"
                 name="empresa"
@@ -226,7 +233,7 @@ class Manager extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <label>Edad:</label>
+              <label className="form-label">Edad</label>
               <input
                 className="form-control"
                 name="edad"
@@ -236,7 +243,7 @@ class Manager extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <label>País:</label>
+              <label className="form-label">País</label>
               <input
                 className="form-control"
                 name="pais"
@@ -246,7 +253,7 @@ class Manager extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <label>Contacto:</label>
+              <label className="form-label">Contacto</label>
               <input
                 className="form-control"
                 name="contacto"
@@ -257,18 +264,17 @@ class Manager extends React.Component {
             </FormGroup>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={() => this.editar(this.state.form)}>
-              Editar
-            </Button>
-            <Button color="danger" onClick={() => this.cerrarModalActualizar()}>
+            <button className="btn-modal-cancel" onClick={() => this.cerrarModalActualizar()}>
               Cancelar
-            </Button>
+            </button>
+            <button className="btn-modal-confirm" onClick={() => this.editar(this.state.form)}>
+              Guardar cambios
+            </button>
           </ModalFooter>
         </Modal>
-      </>
+      </div>
     );
   }
 }
 
 export default Manager;
-
